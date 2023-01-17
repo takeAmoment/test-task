@@ -1,5 +1,6 @@
 import {
   Container,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -11,15 +12,23 @@ import ModalWindow from "components/ModalWindow/ModalWindow";
 import ProductCard from "components/ProductCard/ProductCard";
 import { getAllProducts } from "features/product.slice";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const MainPage = () => {
   const { products, amountPages } = useAppSelector((state) => state.product);
+  const [page, setPage] = useState<number>(1);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getAllProducts());
-  }, []);
+    dispatch(getAllProducts(page));
+  }, [dispatch, page]);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setPage(page);
+  };
 
   return (
     <Container
@@ -57,6 +66,12 @@ const MainPage = () => {
           })}
         </TableBody>
       </Table>
+      <Pagination
+        sx={{ mb: 4 }}
+        count={amountPages}
+        color="primary"
+        onChange={handleChangePage}
+      />
       <ModalWindow />
     </Container>
   );

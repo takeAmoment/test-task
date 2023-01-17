@@ -13,9 +13,9 @@ const initialState: ProductSliceState = {
 
 export const getAllProducts = createAsyncThunk(
   "products/get",
-  async (_, { rejectWithValue }) => {
+  async (page: number, { rejectWithValue }) => {
     try {
-      const response = await getAllProductsApi();
+      const response = await getAllProductsApi(page);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
