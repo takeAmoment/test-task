@@ -21,3 +21,15 @@ export interface IResponse {
 export interface IProductCardProps {
   item: IProduct;
 }
+
+export interface IProductResponse {
+  data: IProduct;
+}
+
+export interface ProductSliceState {
+  product: IProduct | null;
+  amountPages: number;
+  products: IProduct[];
+  error: string | null;
+  status: "idle" | "loading" | "failed";
+}
