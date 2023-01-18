@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import ModalWindow from "components/ModalWindow/ModalWindow";
+import MySkeleton from "components/MySkeleton/MySkeleton";
 import ProductCard from "components/ProductCard/ProductCard";
 import { getAllProducts, getProductById } from "features/product.slice";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
@@ -26,6 +27,7 @@ const MainPage = () => {
   );
   const [page, setPage] = useState<number>(1);
   const [validationError, setValidationError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -47,9 +49,12 @@ const MainPage = () => {
 
     if (e.target.value) {
       dispatch(getProductById(Number(e.target.value)));
+      const message = "Unfortunately item with this id does not exist :(";
+      setErrorMessage(message);
       setValidationError(false);
     } else {
       dispatch(getAllProducts(page));
+      setErrorMessage(null);
       setValidationError(false);
     }
   };
@@ -71,7 +76,7 @@ const MainPage = () => {
         sx={{
           display: "flex",
           justifyContent: "start",
-          width: { xs: "80%", sm: "60%" },
+          width: { xs: "90%", sm: "60%" },
         }}
       >
         <FormControl error={validationError} sx={{ mb: 2, mt: 1 }}>
@@ -88,57 +93,53 @@ const MainPage = () => {
           </FormHelperText>
         </FormControl>
       </Box>
-      {status === "loading" && <p>loading</p>}
+      {status === "loading" ? (
+        <MySkeleton />
+      ) : (
+        <Table
+          sx={{
+            width: { xs: "90%", sm: "60%" },
+            boxShadow: "0px 0px 10px 0.5px #b8b6b6",
+            mb: 3,
+            transition: "all 0.5s",
+          }}
+          aria-label="simple table"
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell align="center" sx={{ fontWeight: 700 }}>
+                ID
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: 700 }}>
+                Name
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: 700 }}>
+                Year
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{ borderTop: "2px solid grey" }}>
+            {products?.map((item) => {
+              return <ProductCard key={item.id} item={item} />;
+            })}
+          </TableBody>
+        </Table>
+      )}
       {products.length > 1 && status !== "loading" && (
-        <>
-          <Table
-            sx={{
-              width: { xs: "80%", sm: "60%" },
-              boxShadow: "0px 0px 10px 0.5px #b8b6b6",
-              mb: 3,
-              transition: "all 0.5s",
-            }}
-            aria-label="simple table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" sx={{ fontWeight: 700 }}>
-                  ID
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700 }}>
-                  Name
-                </TableCell>
-                <TableCell align="center" sx={{ fontWeight: 700 }}>
-                  Year
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody sx={{ borderTop: "2px solid grey" }}>
-              {products?.map((item) => {
-                return <ProductCard key={item.id} item={item} />;
-              })}
-            </TableBody>
-          </Table>
-          <Pagination
-            sx={{ mb: 3 }}
-            count={amountPages}
-            page={page}
-            color="primary"
-            onChange={handleChangePage}
-          />
-        </>
+        <Pagination
+          sx={{ mb: 3 }}
+          count={amountPages}
+          page={page}
+          color="primary"
+          onChange={handleChangePage}
+        />
       )}
       {error && (
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
           {error}
-          <strong> Try to reload page!</strong>
+          <strong> {errorMessage ?? "Try to reload page!"} </strong>
         </Alert>
-      )}
-      {products.length < 1 && !error && (
-        <Typography variant="h6" component="body">
-          Unfortunately item with this id does not exist :&#40;
-        </Typography>
       )}
       <ModalWindow />
     </Container>
