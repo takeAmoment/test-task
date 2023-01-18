@@ -25,7 +25,9 @@ const MainPage = () => {
   const { products, amountPages, status, error } = useAppSelector(
     (state) => state.product
   );
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(
+    Number(localStorage.getItem("page") ?? 1)
+  );
   const [validationError, setValidationError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -39,6 +41,7 @@ const MainPage = () => {
     page: number
   ) => {
     setPage(page);
+    localStorage.setItem("page", page.toString());
   };
 
   const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
