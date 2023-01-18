@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Container,
   FormControl,
@@ -19,7 +21,9 @@ import { useAppDispatch, useAppSelector } from "hooks/redux";
 import React, { useEffect, useState } from "react";
 
 const MainPage = () => {
-  const { products, amountPages } = useAppSelector((state) => state.product);
+  const { products, amountPages, status, error } = useAppSelector(
+    (state) => state.product
+  );
   const [page, setPage] = useState<number>(1);
   const [validationError, setValidationError] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -61,7 +65,7 @@ const MainPage = () => {
       }}
     >
       <Typography variant="h4" component="h2" sx={{ mt: 2 }}>
-        Title
+        Colors
       </Typography>
       <Box
         sx={{
@@ -84,45 +88,57 @@ const MainPage = () => {
           </FormHelperText>
         </FormControl>
       </Box>
-      <Table
-        sx={{
-          width: { xs: "80%", sm: "60%" },
-          boxShadow: "0px 0px 10px 0.5px #b8b6b6",
-          mb: 3,
-        }}
-        aria-label="simple table"
-      >
-        <TableHead>
-          <TableRow>
-            <TableCell align="center" sx={{ fontWeight: 700 }}>
-              ID
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: 700 }}>
-              Name
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: 700 }}>
-              Year
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody sx={{ borderTop: "2px solid grey" }}>
-          {products?.map((item) => {
-            return <ProductCard key={item.id} item={item} />;
-          })}
-        </TableBody>
-      </Table>
-      {products.length < 1 && (
+      {status === "loading" && <p>loading</p>}
+      {products.length > 1 && status !== "loading" && (
+        <>
+          <Table
+            sx={{
+              width: { xs: "80%", sm: "60%" },
+              boxShadow: "0px 0px 10px 0.5px #b8b6b6",
+              mb: 3,
+              transition: "all 0.5s",
+            }}
+            aria-label="simple table"
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" sx={{ fontWeight: 700 }}>
+                  ID
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 700 }}>
+                  Name
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 700 }}>
+                  Year
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody sx={{ borderTop: "2px solid grey" }}>
+              {products?.map((item) => {
+                return <ProductCard key={item.id} item={item} />;
+              })}
+            </TableBody>
+          </Table>
+          <Pagination
+            sx={{ mb: 3 }}
+            count={amountPages}
+            page={page}
+            color="primary"
+            onChange={handleChangePage}
+          />
+        </>
+      )}
+      {error && (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {error}
+          <strong> Try to reload page!</strong>
+        </Alert>
+      )}
+      {products.length < 1 && !error && (
         <Typography variant="h6" component="body">
           Unfortunately item with this id does not exist :&#40;
         </Typography>
-      )}
-      {products.length > 1 && (
-        <Pagination
-          sx={{ mb: 4 }}
-          count={amountPages}
-          color="primary"
-          onChange={handleChangePage}
-        />
       )}
       <ModalWindow />
     </Container>
