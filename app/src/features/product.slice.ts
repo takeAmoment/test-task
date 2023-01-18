@@ -75,6 +75,7 @@ export const productSlice = createSlice({
         state.status = "idle";
         state.error = null;
         if (action.payload) {
+          state.products = [];
           state.products.push(action.payload?.data);
           state.amountPages = 0;
         }
