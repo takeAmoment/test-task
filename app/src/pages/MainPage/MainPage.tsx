@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import ModalWindow from "components/ModalWindow/ModalWindow";
+import ModalWindow from "components/MyModalWindow/ModalWindow";
 import MySkeleton from "components/MySkeleton/MySkeleton";
 import ProductCard from "components/ProductCard/ProductCard";
 import { getAllProducts, getProductById } from "features/product.slice";
