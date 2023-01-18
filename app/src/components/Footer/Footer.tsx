@@ -1,4 +1,12 @@
-import { Grid, Typography } from "@mui/material";
+import {
+  Grid,
+  Link,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  Typography,
+} from "@mui/material";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
@@ -24,7 +32,7 @@ const Footer = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Typography variant="body1">author</Typography>
+        <Typography variant="body1">Aliaksandra Piakhota</Typography>
       </Grid>
       <Grid
         item
@@ -35,7 +43,7 @@ const Footer = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Typography variant="body1">All rules are protected</Typography>
+        <Typography variant="body1">&#169; 2023</Typography>
       </Grid>
       <Grid
         item
@@ -44,13 +52,85 @@ const Footer = () => {
         container
         direction="row"
         justifyContent="center"
-        gap={2}
         alignItems="center"
       >
-        <TelegramIcon />
-        <InstagramIcon />
-        <EmailIcon />
-        <PhoneAndroidIcon />
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <ListItem sx={{ p: 0 }}>
+            <ListItemButton component={Link} href="#" sx={{ p: 0 }}>
+              <ListItemIcon
+                sx={{
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <TelegramIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          <ListItem sx={{ p: 0 }}>
+            <ListItemButton component={Link} href="#" sx={{ p: 0 }}>
+              <ListItemIcon
+                sx={{
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <InstagramIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          <ListItem sx={{ p: 0 }}>
+            <ListItemButton
+              component={Link}
+              href="mailto:noone@.com"
+              type="email"
+              sx={{ p: 0 }}
+            >
+              <ListItemIcon
+                sx={{
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <EmailIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+          <ListItem sx={{ p: 0 }}>
+            <ListItemButton
+              component={Link}
+              href="tel:+136745677554"
+              sx={{ p: 0 }}
+            >
+              <ListItemIcon
+                sx={{
+                  p: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <PhoneAndroidIcon />
+              </ListItemIcon>
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Grid>
     </Grid>
   );
