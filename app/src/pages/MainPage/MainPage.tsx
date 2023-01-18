@@ -44,6 +44,8 @@ const MainPage = () => {
   const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value && !e.target.value.match(/\d/i)) {
       setValidationError(true);
+      const value = e.target.value;
+      e.target.value = value.replace(/\D/g, "");
       return;
     }
 
