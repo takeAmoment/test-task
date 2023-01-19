@@ -86,6 +86,7 @@ const MainPage = () => {
       >
         <FormControl error={validationError} sx={{ mb: 2, mt: 1 }}>
           <TextField
+            data-testid="input"
             id="outlined-search"
             label="Filter by id"
             type="search"
@@ -94,7 +95,7 @@ const MainPage = () => {
             error={validationError}
           />
           <FormHelperText sx={{ height: 10 }}>
-            {validationError ? "* Value must be number" : ""}
+            {validationError ? "* Value must be a number" : ""}
           </FormHelperText>
         </FormControl>
       </Box>
@@ -132,6 +133,7 @@ const MainPage = () => {
       )}
       {products.length > 1 && status !== "loading" && (
         <Pagination
+          data-testid="pagination"
           sx={{ mb: 3 }}
           count={amountPages}
           page={page}
