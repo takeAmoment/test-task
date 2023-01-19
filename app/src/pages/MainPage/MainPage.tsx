@@ -46,7 +46,6 @@ const MainPage = () => {
   }, [searchId, dispatch]);
 
   useEffect(() => {
-    console.log(searchId);
     if (searchId) {
       return getColorById();
     }
