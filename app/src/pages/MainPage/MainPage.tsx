@@ -19,15 +19,20 @@ import MySkeleton from "components/MySkeleton/MySkeleton";
 import ProductCard from "components/ProductCard/ProductCard";
 import { getAllProducts, getProductById } from "features/product.slice";
 import { useAppDispatch, useAppSelector } from "hooks/redux";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const MainPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { products, amountPages, status, error } = useAppSelector(
     (state) => state.product
   );
+  const searchPage = searchParams.get("page");
+  const searchId = searchParams.get("id");
   const [page, setPage] = useState<number>(
-    Number(localStorage.getItem("page") ?? 1)
+    Number(localStorage.getItem("page") ?? searchPage ?? 1)
   );
+
   const [validationError, setValidationError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -36,12 +41,25 @@ const MainPage = () => {
     dispatch(getAllProducts(page));
   }, [dispatch, page]);
 
+  const getColorById = useCallback(() => {
+    dispatch(getProductById(Number(searchId)));
+  }, [searchId, dispatch]);
+
+  useEffect(() => {
+    console.log(searchId);
+    if (searchId) {
+      return getColorById();
+    }
+  }, [getColorById, searchId]);
+
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
     setPage(page);
     localStorage.setItem("page", page.toString());
+    setSearchParams({ page: page.toString() });
+    searchParams.delete("id");
   };
 
   const handleFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,12 +73,15 @@ const MainPage = () => {
     if (e.target.value) {
       dispatch(getProductById(Number(e.target.value)));
       const message = "Unfortunately item with this id does not exist :(";
+      setSearchParams({ id: e.target.value });
       setErrorMessage(message);
       setValidationError(false);
     } else {
       dispatch(getAllProducts(page));
       setErrorMessage(null);
       setValidationError(false);
+      searchParams.delete("id");
+      setSearchParams(searchParams);
     }
   };
 
@@ -90,6 +111,7 @@ const MainPage = () => {
             id="outlined-search"
             label="Filter by id"
             type="search"
+            defaultValue={searchId ?? ""}
             size="small"
             onChange={handleFilter}
             error={validationError}
